@@ -32,10 +32,10 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
     internal init(data: inout DataStream, header: CompoundFileHeader) throws {
         var chars = [unichar]()
         for _ in 1...32 {
-            chars.append(try data.readUInt16())
+            chars.append(try data.read(endianess: .littleEndian) as UInt16)
         }
         
-        let entryNameLength = try data.readUInt16()
+        let entryNameLength = try data.read(endianess: .littleEndian) as UInt16
         if entryNameLength % 2 != 0 || entryNameLength > 64 {
             throw CompoundFileError.invalidEntryNameLength(entryNameLength: entryNameLength)
         }
@@ -45,7 +45,7 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
         // Spec:
         // Object Type (1 byte): This field MUST be 0x00, 0x01, 0x02, or 0x05, depending on the actual type
         // of object. All other values are not valid
-        let objectType = try data.readUInt8()
+        let objectType = try data.read() as UInt8
         guard let objectTypeValue = CompoundFileObjectType(rawValue: objectType) else {
             throw CompoundFileError.invalidEntryObjectType(objectType: objectType)
         }
@@ -54,7 +54,7 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
 
         // Spec:
         // Color Flag (1 byte): This field MUST be 0x00 (red) or 0x01 (black). All other values are not valid.
-        let colorFlag = try data.readUInt8()
+        let colorFlag = try data.read() as UInt8
         guard let colorFlagValue = CompoundFileColorFlag(rawValue: colorFlag) else {
             throw CompoundFileError.invalidEntryColorFlag(colorFlag: colorFlag)
         }
@@ -64,17 +64,17 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
         // Spec:
         // Left Sibling ID (4 bytes): This field contains the stream ID of the left sibling. If there is no left
         // sibling, the field MUST be set to NOSTREAM (0xFFFFFFFF).
-        leftSiblingID = try data.readUInt32()
+        leftSiblingID = try data.read(endianess: .littleEndian)
 
         // Spec:
         // Right Sibling ID (4 bytes): This field contains the stream ID of the right sibling. If there is no right
         // sibling, the field MUST be set to NOSTREAM (0xFFFFFFFF).
-        rightSiblingID = try data.readUInt32()
+        rightSiblingID = try data.read(endianess: .littleEndian)
 
         // Spec:
         // Child ID (4 bytes): This field contains the stream ID of a child object. If there is no child object,
         // including all entries for stream objectthe field MUST be set to NOSTREAM (0xFFFFFFFF)
-        childID = try data.readUInt32()
+        childID = try data.read(endianess: .littleEndian)
 
         // Spec:
         // CLSID (16 bytes): This field contains an object class GUID, if this entry is for a storage object or
@@ -92,7 +92,7 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
         // implementations provide no way for applications to retrieve state bits from a stream object. If an
         // implementation of the file format enables applications to create storage objects without explicitly
         // setting state bitit MUST write all zeroes by default
-        stateBits = try data.readUInt32()
+        stateBits = try data.read(endianess: .littleEndian)
 
         // Spec:
         // Creation Time (8 bytes): This field contains the creation time for a storage object, or all zeroes to
@@ -114,7 +114,7 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
         // Starting Sector Location (4 bytes): This field contains the first sector location if this is a stream
         // object. For a root storage object, this field MUST contain the first sector of the mini stream, if the
         // mini stream exists. For a storage object, this field MUST be set to all zeroes.
-        startSectorLocation = try data.readUInt32()
+        startSectorLocation = try data.read(endianess: .littleEndian)
 
         // Spec:
         // Stream Size (8 bytes): This 64-bit integer field contains the size of the user-defined data if this is
@@ -131,7 +131,7 @@ internal struct CompoundFileEntry: CustomDebugStringConvertible {
         // that parsers ignore the most significant 32 bits of this field in version 3 compound files,
         // treating it as if its value were zero, unless there is a specific reason to do otherwise (for
         // example, a parser whose purpose is to verify the correctness of a compound file).
-        streamSize = try data.readUInt64()
+        streamSize = try data.read(endianess: .littleEndian)
 
         if self.objectType == .storageObject && startSectorLocation != 0 && startSectorLocation != CompoundFileEntry.ENDOFCHAIN {
             throw CompoundFileError.invalidEntryStartSectorLocation(startSectorLocation: startSectorLocation)

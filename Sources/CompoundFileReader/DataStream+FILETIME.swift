@@ -10,8 +10,8 @@ import DataStream
 
 internal extension DataStream {
     mutating func readFILETIME() throws -> FILETIME {
-        let low = try readUInt32()
-        let high = try readUInt32()
+        let low = try read(endianess: .littleEndian) as UInt32
+        let high = try read(endianess: .littleEndian) as UInt32
         return FILETIME(dwLowDateTime: low, dwHighDateTime: high)
     }
 }
