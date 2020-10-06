@@ -1,27 +1,12 @@
 //
-//  ComoundFile.swift
-//  CompoundFileReader
+//  CompoundFile.swift
 //
-//  Created by Hugh Bellamy on 20/07/2020.
-//  Copyright © 2020 Hugh Bellamy. All rights reserved.
+//
+//  Created by Hugh Bellamy on 06/10/2020.
 //
 
 import DataStream
 import Foundation
-
-public enum CompoundFileError : Error {
-    case invalidSignature(signature: UInt64)
-    case invalidVersion(version: UInt16)
-    case invalidByteOrder(byteOrder: UInt16)
-    case invalidSectorShift(sectorShift: UInt16)
-    case invalidMiniSectorShift(miniSectorShift: UInt16)
-    case invalidNumberOfDirectorySectors(numberOfDirectorySectors: UInt32)
-    case invalidEntryNameLength(entryNameLength: UInt16)
-    case invalidEntryObjectType(objectType: UInt8)
-    case invalidEntryColorFlag(colorFlag: UInt8)
-    case invalidEntryStartSectorLocation(startSectorLocation: UInt32)
-    case invalidEntryStreamSize(streamSize: UInt64)
-}
 
 public class CompoundFile {
     private var dataStream: DataStream
@@ -36,24 +21,24 @@ public class CompoundFile {
         miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))
     }
     
-    public var rootStorage: CompoundFileStorage {
+    public lazy var rootStorage: CompoundFileStorage = {
         return getStorage(entryID: 0)!
-    }
+    }()
     
     public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
         if entryID == 0xFFFFFFFF {
             return nil
         }
 
-        if UInt32(dataStream.count) / CompoundFileEntry.size <= entryID {
+        if UInt32(dataStream.count) / CompoundFileDirectoryEntry.size <= entryID {
             print("Entry \(entryID) doesn't exist")
             return nil
         }
 
-        let (finalSector, finalOffset) = locateFinalSector(sector: header.firstDirectorySectorLocation, offset: entryID * CompoundFileEntry.size)
+        let (finalSector, finalOffset) = locateFinalSector(sector: header.firstDirectorySectorLocation, offset: entryID * CompoundFileDirectoryEntry.size)
         dataStream.position = sectorOffsetToStreamPosition(sector: finalSector, offset: finalOffset)
 
-        guard let entry = try? CompoundFileEntry(data: &dataStream, header: header) else {
+        guard let entry = try? CompoundFileDirectoryEntry(dataStream: &dataStream, header: header) else {
             print("Entry invalid")
             return nil
         }

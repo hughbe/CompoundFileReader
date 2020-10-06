@@ -1,9 +1,8 @@
 //
-//  CFItem.swift
-//  CompoundFileReader
+//  CompoundFileStorage.swift
 //
-//  Created by Hugh Bellamy on 21/07/2020.
-//  Copyright © 2020 Hugh Bellamy. All rights reserved.
+//
+//  Created by Hugh Bellamy on 06/10/2020.
 //
 
 import DataStream
@@ -11,13 +10,13 @@ import Foundation
 
 public struct CompoundFileStorage: CustomDebugStringConvertible {
     internal let file: CompoundFile
-    internal let entry: CompoundFileEntry
+    internal let entry: CompoundFileDirectoryEntry
     
     public var name: String {
         return entry.name
     }
 
-    public var children: [String: CompoundFileStorage] {
+    public lazy var children: [String: CompoundFileStorage] = {
         guard let child = file.getStorage(entryID: entry.childID) else {
             return [:]
         }
@@ -26,7 +25,7 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
         result[child.name] = child
         child.addSiblings(to: &result)
         return result
-    }
+    }()
     
     private func addSiblings(to: inout [String: CompoundFileStorage]) {
         let leftID = entry.leftSiblingID
