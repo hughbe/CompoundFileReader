@@ -21,9 +21,9 @@ public class CompoundFile {
         miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))
     }
     
-    public lazy var rootStorage: CompoundFileStorage = {
+    public var rootStorage: CompoundFileStorage {
         return getStorage(entryID: 0)!
-    }()
+    }
     
     public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
         if entryID == 0xFFFFFFFF {
