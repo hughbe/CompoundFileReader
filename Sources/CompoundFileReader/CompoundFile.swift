@@ -21,9 +21,9 @@ public class CompoundFile {
         miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))
     }
     
-    public var rootStorage: CompoundFileStorage {
+    public lazy var rootStorage: CompoundFileStorage = {
         return getStorage(entryID: 0)!
-    }
+    }()
     
     public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
         if entryID == 0xFFFFFFFF {
@@ -58,7 +58,7 @@ public class CompoundFile {
         var buffer = buffer
         var (sector, offset) = locateFinalSector(sector: sector, offset: offset)
 
-        var length = buffer.count;
+        var length = buffer.count
         while length > 0 {
             dataStream.position = sectorOffsetToStreamPosition(sector: sector, offset: offset)
             let copyLength = min(length, Int(sectorSize - offset))
@@ -66,8 +66,8 @@ public class CompoundFile {
 
             buffer = UnsafeMutableBufferPointer(rebasing: buffer[copyLength...])
             length -= copyLength
-            sector = getNextSector(sector: sector);
-            offset = 0;
+            sector = getNextSector(sector: sector)
+            offset = 0
         }
     }
     
@@ -83,8 +83,8 @@ public class CompoundFile {
 
             buffer = UnsafeMutableBufferPointer(rebasing: buffer[copyLength...])
             length -= copyLength
-            sector = getNextMiniSector(miniSector: sector);
-            offset = 0;
+            sector = getNextMiniSector(miniSector: sector)
+            offset = 0
         }
     }
     
@@ -93,19 +93,19 @@ public class CompoundFile {
         var offset = offset
         while (offset >= sectorSize)
         {
-            offset -= sectorSize;
-            sector = getNextSector(sector: sector);
+            offset -= sectorSize
+            sector = getNextSector(sector: sector)
         }
 
         return (sector, offset)
     }
     
     private func getNextSector(sector: UInt32) -> UInt32 {
-        let entriesPerSector = sectorSize / 4;
-        let fatSectorNumber = sector / entriesPerSector;
-        let fatSectorLocation = getFATSectorLocation(fatSectorNumber: fatSectorNumber);
-        dataStream.position = sectorOffsetToStreamPosition(sector: fatSectorLocation, offset: sector % entriesPerSector * 4);
-        return try! dataStream.read(endianess: .littleEndian);
+        let entriesPerSector = sectorSize / 4
+        let fatSectorNumber = sector / entriesPerSector
+        let fatSectorLocation = getFATSectorLocation(fatSectorNumber: fatSectorNumber)
+        dataStream.position = sectorOffsetToStreamPosition(sector: fatSectorLocation, offset: sector % entriesPerSector * 4)
+        return try! dataStream.read(endianess: .littleEndian)
     }
     
     private func getFATSectorLocation(fatSectorNumber: UInt32) -> UInt32 {
@@ -114,21 +114,21 @@ public class CompoundFile {
             return header.DIFAT[Int(fatSectorNumber)]
         }
 
-        fatSectorNumber -= 109;
-        let entriesPerSector = sectorSize / 4 - 1;
-        var difatSectorLocation = header.firstDIFATSectorLocation;
+        fatSectorNumber -= 109
+        let entriesPerSector = sectorSize / 4 - 1
+        var difatSectorLocation = header.firstDIFATSectorLocation
         while fatSectorNumber >= entriesPerSector {
-            fatSectorNumber -= entriesPerSector;
+            fatSectorNumber -= entriesPerSector
             dataStream.position = sectorOffsetToStreamPosition(sector: difatSectorLocation, offset: sectorSize - 4)
             difatSectorLocation = try! dataStream.read(endianess: .littleEndian)
         }
 
-        dataStream.position = sectorOffsetToStreamPosition(sector: difatSectorLocation, offset: fatSectorNumber * 4);
+        dataStream.position = sectorOffsetToStreamPosition(sector: difatSectorLocation, offset: fatSectorNumber * 4)
         return try! dataStream.read(endianess: .littleEndian)
     }
 
     private func sectorOffsetToStreamPosition(sector: UInt32, offset: UInt32) -> Int {
-        return Int(sectorSize + sectorSize * sector + offset);
+        return Int(sectorSize + sectorSize * sector + offset)
     }
 
     private func locateFinalMiniSector(sector: UInt32, offset: UInt32) -> (sector: UInt32, offset: UInt32)
@@ -136,8 +136,8 @@ public class CompoundFile {
         var sector = sector
         var offset = offset
         while (offset >= miniSectorSize) {
-            offset -= miniSectorSize;
-            sector = getNextMiniSector(miniSector: sector);
+            offset -= miniSectorSize
+            sector = getNextMiniSector(miniSector: sector)
         }
 
         return (sector: sector, offset: offset)
@@ -145,13 +145,13 @@ public class CompoundFile {
 
     private func getNextMiniSector(miniSector: UInt32) -> UInt32 {
         let (sector, offset) = locateFinalSector(sector: header.firstMiniFATSectorLocation, offset: miniSector * 4)
-        dataStream.position = sectorOffsetToStreamPosition(sector: sector, offset: offset);
+        dataStream.position = sectorOffsetToStreamPosition(sector: sector, offset: offset)
         return try! dataStream.read(endianess: .littleEndian)
     }
 
     private func miniSectorOffsetToStreamPosition(sector: UInt32, offset: UInt32) -> Int {
         let (sector, offset) = locateFinalSector(sector: rootStorage.entry.startSectorLocation, offset: sector * miniSectorSize + offset)
-        return sectorOffsetToStreamPosition(sector: sector, offset: offset);
+        return sectorOffsetToStreamPosition(sector: sector, offset: offset)
     }
 
 
