@@ -62,7 +62,7 @@ public class CompoundFile {
         while length > 0 {
             dataStream.position = sectorOffsetToStreamPosition(sector: sector, offset: offset)
             let copyLength = min(length, Int(sectorSize - offset))
-            try dataStream.copyBytes(to: buffer, count: copyLength)
+            try dataStream.readBytes(to: buffer, count: copyLength)
 
             buffer = UnsafeMutableBufferPointer(rebasing: buffer[copyLength...])
             length -= copyLength
@@ -79,7 +79,7 @@ public class CompoundFile {
         while length > 0 {
             dataStream.position = miniSectorOffsetToStreamPosition(sector: sector, offset: offset)
             let copyLength = min(length, Int(miniSectorSize - offset))
-            try dataStream.copyBytes(to: buffer, count: copyLength)
+            try dataStream.readBytes(to: buffer, count: copyLength)
 
             buffer = UnsafeMutableBufferPointer(rebasing: buffer[copyLength...])
             length -= copyLength

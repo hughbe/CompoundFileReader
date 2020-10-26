@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/hughbe/DataStream",
         "state": {
           "branch": null,
-          "revision": "d5cd0501cc8fde55596039725e6dedcd8e32b89d",
-          "version": "1.1.3"
+          "revision": "e7da621235b5a4db261f82a51a936947c5dcab0c",
+          "version": "1.2.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/hughbe/WindowsDataTypes",
         "state": {
           "branch": null,
-          "revision": "9109d41da3051ec5604aea03bc5290d20c82ab22",
-          "version": "1.0.2"
+          "revision": "d61796516927097258550e91d0c2f041ea19eaec",
+          "version": "1.0.4"
         }
       }
     ]
