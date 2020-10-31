@@ -13,7 +13,11 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
     internal let entry: CompoundFileDirectoryEntry
     
     public var name: String {
-        return entry.name
+        entry.name
+    }
+    
+    public var count: UInt64 {
+        entry.streamSize
     }
 
     public lazy var children: [String: CompoundFileStorage] = {

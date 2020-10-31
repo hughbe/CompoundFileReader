@@ -15,16 +15,16 @@ public class CompoundFile {
     private let miniSectorSize: UInt32
     
     public init(data: Data) throws {
-        dataStream = DataStream(data: data)
-        header = try CompoundFileHeader(data: &dataStream)
-        sectorSize = UInt32(pow(2, Double(header.sectorShift)))
-        miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))
+        self.dataStream = DataStream(data: data)
+        self.header = try CompoundFileHeader(dataStream: &dataStream)
+        self.sectorSize = UInt32(pow(2, Double(header.sectorShift)))
+        self.miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))
     }
     
     public lazy var rootStorage: CompoundFileStorage = {
         return getStorage(entryID: 0)!
     }()
-    
+
     public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
         if entryID == 0xFFFFFFFF {
             return nil
@@ -91,8 +91,7 @@ public class CompoundFile {
     private func locateFinalSector(sector: UInt32, offset: UInt32) -> (finalSector: UInt32, finalOffset: UInt32) {
         var sector = sector
         var offset = offset
-        while (offset >= sectorSize)
-        {
+        while offset >= sectorSize {
             offset -= sectorSize
             sector = getNextSector(sector: sector)
         }
@@ -110,7 +109,7 @@ public class CompoundFile {
     
     private func getFATSectorLocation(fatSectorNumber: UInt32) -> UInt32 {
         var fatSectorNumber = fatSectorNumber
-        if (fatSectorNumber < 109) {
+        if fatSectorNumber < 109 {
             return header.DIFAT[Int(fatSectorNumber)]
         }
 
@@ -131,11 +130,10 @@ public class CompoundFile {
         return Int(sectorSize + sectorSize * sector + offset)
     }
 
-    private func locateFinalMiniSector(sector: UInt32, offset: UInt32) -> (sector: UInt32, offset: UInt32)
-    {
+    private func locateFinalMiniSector(sector: UInt32, offset: UInt32) -> (sector: UInt32, offset: UInt32) {
         var sector = sector
         var offset = offset
-        while (offset >= miniSectorSize) {
+        while offset >= miniSectorSize {
             offset -= miniSectorSize
             sector = getNextMiniSector(miniSector: sector)
         }
