@@ -23,6 +23,7 @@ final class DumpFileTests: XCTestCase {
     
     func testDump() throws {
         for (name, fileExtension) in [
+            ("decalage2/olefile/test-ole-file", "doc"),
             ("hughbe/custom", "msg"),
             ("hughbe/sample", "doc"),
             ("microsoft/compoundfilereader/{B85C5677-E8BC-11E4-825B-10604B7CB9F0}", "dat"),

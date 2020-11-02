@@ -32,6 +32,7 @@ import WindowsDataTypes
 /// The detailed Directory Entry structure is specified below.
 internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
     public static let size: UInt32 = 128
+    public static let NOSTREAM = 0xFFFFFFFF
     public static let FREESECT = 0xFFFFFFFF
     public static let ENDOFCHAIN = 0xFFFFFFFE
     public static let FATSECT = 0xFFFFFFFD
@@ -69,7 +70,11 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
             throw CompoundFileError.invalidEntryNameLength(entryNameLength: entryNameLength)
         }
         
-        self.name = String(utf16CodeUnits: &chars, count: Int(entryNameLength / 2) - 1)
+        if entryNameLength == 0 {
+            self.name = ""
+        } else {
+            self.name = String(utf16CodeUnits: &chars, count: Int(entryNameLength / 2) - 1)
+        }
 
         /// Object Type (1 byte): This field MUST be 0x00, 0x01, 0x02, or 0x05, depending on the actual type
         /// of object. All other values are not valid

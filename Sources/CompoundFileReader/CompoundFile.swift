@@ -26,7 +26,7 @@ public class CompoundFile {
     }()
 
     public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
-        if entryID == 0xFFFFFFFF {
+        if entryID == CompoundFileDirectoryEntry.NOSTREAM {
             return nil
         }
 
