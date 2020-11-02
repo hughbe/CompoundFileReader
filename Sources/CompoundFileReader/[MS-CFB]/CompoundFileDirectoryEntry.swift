@@ -73,20 +73,20 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
 
         /// Object Type (1 byte): This field MUST be 0x00, 0x01, 0x02, or 0x05, depending on the actual type
         /// of object. All other values are not valid
-        let objectType: UInt8 = try dataStream.read()
-        guard let objectTypeValue = CompoundFileObjectType(rawValue: objectType) else {
-            throw CompoundFileError.invalidEntryObjectType(objectType: objectType)
+        let objectTypeRaw: UInt8 = try dataStream.read()
+        guard let objectType = CompoundFileObjectType(rawValue: objectTypeRaw) else {
+            throw CompoundFileError.invalidEntryObjectType(objectType: objectTypeRaw)
         }
         
-        self.objectType = objectTypeValue
+        self.objectType = objectType
 
         /// Color Flag (1 byte): This field MUST be 0x00 (red) or 0x01 (black). All other values are not valid.
-        let colorFlag = try dataStream.read() as UInt8
-        guard let colorFlagValue = ColorFlag(rawValue: colorFlag) else {
-            throw CompoundFileError.invalidEntryColorFlag(colorFlag: colorFlag)
+        let colorFlagRaw = try dataStream.read() as UInt8
+        guard let colorFlag = ColorFlag(rawValue: colorFlagRaw) else {
+            throw CompoundFileError.invalidEntryColorFlag(colorFlag: colorFlagRaw)
         }
         
-        self.colorFlag = colorFlagValue
+        self.colorFlag = colorFlag
 
         /// Left Sibling ID (4 bytes): This field contains the stream ID of the left sibling. If there is no left
         /// sibling, the field MUST be set to NOSTREAM (0xFFFFFFFF).
@@ -171,7 +171,12 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// that parsers ignore the most significant 32 bits of this field in version 3 compound files,
         /// treating it as if its value were zero, unless there is a specific reason to do otherwise (for
         /// example, a parser whose purpose is to verify the correctness of a compound file).
-        self.streamSize = try dataStream.read(endianess: .littleEndian)
+        let streamSize: UInt64 = try dataStream.read(endianess: .littleEndian)
+        if header.majorVersion == 0x03 {
+            self.streamSize = streamSize & 0xFFFFFFFF
+        } else {
+            self.streamSize = streamSize
+        }
 
         if self.objectType == .storageObject && self.startSectorLocation != 0 && self.startSectorLocation != CompoundFileDirectoryEntry.ENDOFCHAIN {
             throw CompoundFileError.invalidEntryStartSectorLocation(startSectorLocation: self.startSectorLocation)

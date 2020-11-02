@@ -25,7 +25,16 @@ final class DumpFileTests: XCTestCase {
         for (name, fileExtension) in [
             ("hughbe/custom", "msg"),
             ("hughbe/sample", "doc"),
+            ("microsoft/compoundfilereader/{B85C5677-E8BC-11E4-825B-10604B7CB9F0}", "dat"),
+            ("microsoft/compoundfilereader/{FE554E21-EA21-11E4-825B-10604B7CB9F0}", "dat"),
+            ("microsoft/compoundfilereader/{FE554E21-EA21-11E4-825B-10604B7CB9F0}", "dat"),
+            ("microsoft/compoundfilereader/1", "dat"),
+            ("microsoft/compoundfilereader/2", "dat"),
+            ("microsoft/compoundfilereader/unicode", "dat"),
+            ("ironfede/openmcdf/poWEr.prelim", "doc"),
             ("ironfede/openmcdf/report", "xls"),
+            ("ironfede/openmcdf/testbad", "ole"),
+            ("ironfede/openmcdf/testgood", "ole"),
         ] {
             let data = try getData(name: name, fileExtension: fileExtension)
             let file = try CompoundFile(data: data)
