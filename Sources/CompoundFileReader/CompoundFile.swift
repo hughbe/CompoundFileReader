@@ -68,6 +68,10 @@ public class CompoundFile {
         
         var length = buffer.count
         while length > 0 {
+            if sector == CompoundFileDirectoryEntry.NOSTREAM {
+                break
+            }
+
             dataStream.position = miniSectorOffsetToStreamPosition(sector: sector, offset: offset)
             let copyLength = min(length, Int(miniSectorSize - offset))
             try dataStream.readBytes(to: buffer, count: copyLength)
