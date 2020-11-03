@@ -3017,6 +3017,62 @@ final class CompoundFileReaderTests: XCTestCase {
                 }
             }
         }
+        do {
+            let file = try CompoundFile(data: try getData(name: "ironfede/openmcdf/mediationform", fileExtension: "doc"))
+            XCTAssertEqual("Root Entry", file.rootStorage.name)
+            XCTAssertEqual(0x0000000000000080, file.rootStorage.count)
+            do {
+                var storage = file.rootStorage
+                XCTAssertEqual(6, storage.children.count)
+                XCTAssertEqual("WordDocument", storage.children["WordDocument"]!.name)
+                XCTAssertEqual(0x0000000000003C36, storage.children["WordDocument"]!.count)
+                XCTAssertEqual([0x43, 0xDE, 0x39, 0x54, 0x50, 0x77, 0x5C, 0xA5, 0x9B, 0xDA, 0xAF, 0xF2, 0xE1, 0x26, 0x59, 0xA5, 0x49, 0xED, 0x3C, 0xA3, 0x00, 0xA6, 0x0B, 0x09, 0x52, 0x31, 0xDD, 0x60, 0xC1, 0x14, 0x3E, 0x38], [UInt8](SHA256.hash(data: storage.children["WordDocument"]!.data)))
+                do {
+                    var storage = storage.children["WordDocument"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("Data", storage.children["Data"]!.name)
+                XCTAssertEqual(0x0000000000001000, storage.children["Data"]!.count)
+                XCTAssertEqual([0xAD, 0x7F, 0xAC, 0xB2, 0x58, 0x6F, 0xC6, 0xE9, 0x66, 0xC0, 0x04, 0xD7, 0xD1, 0xD1, 0x6B, 0x02, 0x4F, 0x58, 0x05, 0xFF, 0x7C, 0xB4, 0x7C, 0x7A, 0x85, 0xDA, 0xBD, 0x8B, 0x48, 0x89, 0x2C, 0xA7], [UInt8](SHA256.hash(data: storage.children["Data"]!.data)))
+                do {
+                    var storage = storage.children["Data"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("1Table", storage.children["1Table"]!.name)
+                XCTAssertEqual(0x000000000000522F, storage.children["1Table"]!.count)
+                XCTAssertEqual([0x61, 0x1C, 0x6C, 0x55, 0xE2, 0x22, 0xEE, 0x17, 0xE4, 0x11, 0xE4, 0xB7, 0x28, 0x4D, 0x12, 0x84, 0xBD, 0xC1, 0x95, 0xEB, 0x88, 0x6E, 0x1D, 0x0C, 0x2C, 0x45, 0xED, 0xDE, 0xC3, 0x1A, 0x23, 0x99], [UInt8](SHA256.hash(data: storage.children["1Table"]!.data)))
+                do {
+                    var storage = storage.children["1Table"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{05}SummaryInformation", storage.children["\u{05}SummaryInformation"]!.name)
+                XCTAssertEqual(0x0000000000001000, storage.children["\u{05}SummaryInformation"]!.count)
+                XCTAssertEqual([0xBB, 0x99, 0x49, 0x83, 0x37, 0x0B, 0x56, 0x70, 0xAD, 0xC2, 0xA2, 0x86, 0x76, 0x49, 0xCE, 0x55, 0xC0, 0x39, 0xB7, 0xF5, 0x1C, 0x71, 0x84, 0x9A, 0xB2, 0x85, 0x69, 0x74, 0xCE, 0x94, 0xE9, 0x72], [UInt8](SHA256.hash(data: storage.children["\u{05}SummaryInformation"]!.data)))
+                do {
+                    var storage = storage.children["\u{05}SummaryInformation"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{05}DocumentSummaryInformation", storage.children["\u{05}DocumentSummaryInformation"]!.name)
+                XCTAssertEqual(0x0000000000001000, storage.children["\u{05}DocumentSummaryInformation"]!.count)
+                XCTAssertEqual([0x73, 0x28, 0x4D, 0xA3, 0xE5, 0xE7, 0x72, 0xD8, 0x5A, 0xAD, 0x70, 0x67, 0x90, 0xBA, 0x31, 0x96, 0xF3, 0x64, 0x73, 0x13, 0x9F, 0x20, 0x2F, 0x02, 0xF9, 0x5B, 0xA3, 0x20, 0x2F, 0x2C, 0x81, 0x6B], [UInt8](SHA256.hash(data: storage.children["\u{05}DocumentSummaryInformation"]!.data)))
+                do {
+                    var storage = storage.children["\u{05}DocumentSummaryInformation"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                XCTAssertEqual(0x0000000000000079, storage.children["\u{01}CompObj"]!.count)
+                XCTAssertEqual([0xD8, 0x12, 0x9D, 0xE4, 0x28, 0x6D, 0xC4, 0xFD, 0x24, 0x5C, 0x77, 0x76, 0xB5, 0x1D, 0x76, 0xAA, 0xA7, 0x27, 0x95, 0x6E, 0x8F, 0xC8, 0x8F, 0xF9, 0x28, 0xEB, 0x69, 0xFF, 0x7F, 0xC1, 0x7E, 0x0B], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                do {
+                    var storage = storage.children["\u{01}CompObj"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+            }
+        }
         /*
         do {
             let file = try CompoundFile(data: try getData(name: "ironfede/openmcdf/poWEr.prelim", fileExtension: "doc"))

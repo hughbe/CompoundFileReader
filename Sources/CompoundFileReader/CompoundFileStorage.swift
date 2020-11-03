@@ -21,7 +21,7 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
     }
 
     public lazy var children: [String: CompoundFileStorage] = {
-        guard let child = file.getStorage(entryID: entry.childID) else {
+        guard entry.childID != CompoundFileDirectoryEntry.NOSTREAM, let child = try? file.getStorage(entryID: entry.childID) else {
             return [:]
         }
 
@@ -33,13 +33,13 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
     
     private func addSiblings(to: inout [String: CompoundFileStorage]) {
         let leftID = entry.leftSiblingID
-        if let leftSibling = file.getStorage(entryID: leftID) {
+        if leftID != CompoundFileDirectoryEntry.NOSTREAM, let leftSibling = try? file.getStorage(entryID: leftID) {
             to[leftSibling.name] = leftSibling
             leftSibling.addSiblings(to: &to)
         }
         
         let rightID = entry.rightSiblingID
-        if let rightSibling = file.getStorage(entryID: rightID) {
+        if rightID != CompoundFileDirectoryEntry.NOSTREAM, let rightSibling = try? file.getStorage(entryID: rightID) {
             to[rightSibling.name] = rightSibling
             rightSibling.addSiblings(to: &to)
         }

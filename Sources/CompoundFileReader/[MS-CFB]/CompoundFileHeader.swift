@@ -94,6 +94,9 @@ internal struct CompoundFileHeader: CustomDebugStringConvertible {
         /// and mini stream, and that cutoff is 4,096 bytes. Any user-defined data stream that is greater than
         /// or equal to this cutoff size must be allocated as normal sectors from the FAT
         self.miniStreamCutoffSize = try dataStream.read(endianess: .littleEndian)
+        if self.miniStreamCutoffSize != 0x00001000 {
+            throw CompoundFileError.invalidMiniStreamCutoffSize(miniStreamCutoffSize: self.miniStreamCutoffSize)
+        }
         
         /// First Mini FAT Sector Location (4 bytes): This integer field contains the starting sector number for
         /// the mini FAT.

@@ -32,6 +32,7 @@ final class DumpFileTests: XCTestCase {
             ("microsoft/compoundfilereader/1", "dat"),
             ("microsoft/compoundfilereader/2", "dat"),
             ("microsoft/compoundfilereader/unicode", "dat"),
+            ("ironfede/openmcdf/mediationform", "doc"),
             ("ironfede/openmcdf/poWEr.prelim", "doc"),
             ("ironfede/openmcdf/report", "xls"),
             ("ironfede/openmcdf/testbad", "ole"),

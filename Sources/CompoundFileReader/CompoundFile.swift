@@ -22,27 +22,18 @@ public class CompoundFile {
     }
     
     public lazy var rootStorage: CompoundFileStorage = {
-        return getStorage(entryID: 0)!
+        return try! getStorage(entryID: 0)
     }()
 
-    public func getStorage(entryID: UInt32) -> CompoundFileStorage? {
-        if entryID == CompoundFileDirectoryEntry.NOSTREAM {
-            return nil
-        }
-
+    public func getStorage(entryID: UInt32) throws -> CompoundFileStorage {
         if UInt32(dataStream.count) / CompoundFileDirectoryEntry.size <= entryID {
-            print("Entry \(entryID) doesn't exist")
-            return nil
+            throw CompoundFileError.invalidEntryID(entryID: entryID)
         }
 
         let (finalSector, finalOffset) = locateFinalSector(sector: header.firstDirectorySectorLocation, offset: entryID * CompoundFileDirectoryEntry.size)
         dataStream.position = sectorOffsetToStreamPosition(sector: finalSector, offset: finalOffset)
 
-        guard let entry = try? CompoundFileDirectoryEntry(dataStream: &dataStream, header: header) else {
-            print("Entry invalid")
-            return nil
-        }
-
+        let entry = try CompoundFileDirectoryEntry(dataStream: &dataStream, header: header)
         return CompoundFileStorage(file: self, entry: entry)
     }
     
