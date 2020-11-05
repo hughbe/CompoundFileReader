@@ -3966,6 +3966,97 @@ final class CompoundFileReaderTests: XCTestCase {
                 }
             }
         }
+        do {
+            let file = try CompoundFile(data: try getData(name: "aquasync/ruby-ole/oleWithDirs", fileExtension: "ole"))
+            XCTAssertEqual("Root Entry", file.rootStorage.name)
+            XCTAssertEqual(0x00000000000002C8, file.rootStorage.count)
+            do {
+                var storage = file.rootStorage
+                XCTAssertEqual(3, storage.children.count)
+                XCTAssertEqual("file1", storage.children["file1"]!.name)
+                XCTAssertEqual(0x0000000000000048, storage.children["file1"]!.count)
+                XCTAssertEqual([0xC8, 0x5F, 0x5F, 0xFF, 0x47, 0xA9, 0x8F, 0x60, 0x51, 0xE1, 0xF1, 0xDA, 0xEE, 0xD3, 0xDA, 0xB2, 0x4D, 0x8E, 0xB4, 0xE8, 0xD5, 0x7F, 0xDC, 0xAA, 0x80, 0x1A, 0xB3, 0x31, 0x4F, 0x68, 0x0F, 0xF4], [UInt8](SHA256.hash(data: storage.children["file1"]!.data)))
+                do {
+                    var storage = storage.children["file1"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("dir2", storage.children["dir2"]!.name)
+                XCTAssertEqual(0x0000000000000000, storage.children["dir2"]!.count)
+                XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["dir2"]!.data)))
+                do {
+                    var storage = storage.children["dir2"]!
+                    XCTAssertEqual(2, storage.children.count)
+                    XCTAssertEqual("file21", storage.children["file21"]!.name)
+                    XCTAssertEqual(0x000000000000004E, storage.children["file21"]!.count)
+                    XCTAssertEqual([0xF6, 0xD1, 0x1A, 0x8C, 0x68, 0x08, 0x12, 0xD6, 0xC9, 0x25, 0x6C, 0xD4, 0xAA, 0x19, 0x01, 0x9D, 0x0B, 0x24, 0x68, 0x9A, 0x20, 0xBE, 0xB2, 0xC2, 0x06, 0x97, 0xA3, 0x6B, 0xF1, 0x5D, 0x6F, 0xEA], [UInt8](SHA256.hash(data: storage.children["file21"]!.data)))
+                    do {
+                        var storage = storage.children["file21"]!
+                        XCTAssertEqual(0, storage.children.count)
+                    }
+
+                    XCTAssertEqual("dir21", storage.children["dir21"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["dir21"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["dir21"]!.data)))
+                    do {
+                        var storage = storage.children["dir21"]!
+                        XCTAssertEqual(1, storage.children.count)
+                        XCTAssertEqual("dir221", storage.children["dir221"]!.name)
+                        XCTAssertEqual(0x0000000000000000, storage.children["dir221"]!.count)
+                        XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["dir221"]!.data)))
+                        do {
+                            var storage = storage.children["dir221"]!
+                            XCTAssertEqual(1, storage.children.count)
+                            XCTAssertEqual("file2221", storage.children["file2221"]!.name)
+                            XCTAssertEqual(0x000000000000005D, storage.children["file2221"]!.count)
+                            XCTAssertEqual([0xB1, 0x6C, 0xD3, 0xE5, 0x1F, 0xEF, 0x5E, 0x3A, 0x17, 0xF3, 0x84, 0x13, 0xA2, 0x51, 0xCC, 0x9D, 0xE0, 0x9C, 0xA9, 0xCD, 0x9E, 0x04, 0x64, 0x78, 0x20, 0x30, 0x89, 0xDC, 0x30, 0x79, 0xEC, 0x9B], [UInt8](SHA256.hash(data: storage.children["file2221"]!.data)))
+                            do {
+                                var storage = storage.children["file2221"]!
+                                XCTAssertEqual(0, storage.children.count)
+                            }
+                        }
+                    }
+                }
+
+                XCTAssertEqual("dir1", storage.children["dir1"]!.name)
+                XCTAssertEqual(0x0000000000000000, storage.children["dir1"]!.count)
+                XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["dir1"]!.data)))
+                do {
+                    var storage = storage.children["dir1"]!
+                    XCTAssertEqual(3, storage.children.count)
+                    XCTAssertEqual("file12", storage.children["file12"]!.name)
+                    XCTAssertEqual(0x000000000000004E, storage.children["file12"]!.count)
+                    XCTAssertEqual([0xFB, 0x84, 0x6D, 0xD1, 0x38, 0xE5, 0xB1, 0xAC, 0x90, 0x2A, 0x7F, 0xD8, 0xA6, 0x18, 0x41, 0xEA, 0x4F, 0x36, 0xEB, 0xD0, 0x83, 0x22, 0x08, 0xC7, 0xEF, 0x57, 0x9A, 0xAD, 0x75, 0x35, 0x61, 0x37], [UInt8](SHA256.hash(data: storage.children["file12"]!.data)))
+                    do {
+                        var storage = storage.children["file12"]!
+                        XCTAssertEqual(0, storage.children.count)
+                    }
+
+                    XCTAssertEqual("file11", storage.children["file11"]!.name)
+                    XCTAssertEqual(0x000000000000004E, storage.children["file11"]!.count)
+                    XCTAssertEqual([0xF7, 0x91, 0x67, 0x62, 0x3A, 0x8A, 0xE9, 0x06, 0xAD, 0x15, 0x09, 0xB2, 0xF3, 0x89, 0x65, 0x76, 0x0F, 0xFC, 0x5F, 0xCB, 0xC0, 0x79, 0x4A, 0x4C, 0xD8, 0xD1, 0x95, 0x97, 0x2C, 0xC7, 0x7B, 0x73], [UInt8](SHA256.hash(data: storage.children["file11"]!.data)))
+                    do {
+                        var storage = storage.children["file11"]!
+                        XCTAssertEqual(0, storage.children.count)
+                    }
+
+                    XCTAssertEqual("dir11", storage.children["dir11"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["dir11"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["dir11"]!.data)))
+                    do {
+                        var storage = storage.children["dir11"]!
+                        XCTAssertEqual(1, storage.children.count)
+                        XCTAssertEqual("file111", storage.children["file111"]!.name)
+                        XCTAssertEqual(0x0000000000000055, storage.children["file111"]!.count)
+                        XCTAssertEqual([0xB4, 0x2C, 0x70, 0xDD, 0xA6, 0xAB, 0xC0, 0xB1, 0x78, 0xAA, 0x9B, 0x5D, 0x78, 0x49, 0x76, 0xAF, 0x25, 0x6B, 0x92, 0x2D, 0x4C, 0x0A, 0xA3, 0xB6, 0xDF, 0x6D, 0x08, 0xD4, 0x30, 0x1B, 0xDA, 0xE9], [UInt8](SHA256.hash(data: storage.children["file111"]!.data)))
+                        do {
+                            var storage = storage.children["file111"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+                    }
+                }
+            }
+        }
         /*
         do {
             let file = try CompoundFile(data: try getData(name: "ironfede/openmcdf/poWEr.prelim", fileExtension: "doc"))

@@ -183,7 +183,7 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
             self.streamSize = streamSize
         }
 
-        if self.objectType == .storageObject && self.startSectorLocation != 0 && self.startSectorLocation != CompoundFileDirectoryEntry.ENDOFCHAIN {
+        if self.objectType == .storageObject && self.startSectorLocation != 0 && self.startSectorLocation != CompoundFileDirectoryEntry.ENDOFCHAIN && self.startSectorLocation != CompoundFileDirectoryEntry.FREESECT {
             throw CompoundFileError.invalidEntryStartSectorLocation(startSectorLocation: self.startSectorLocation)
         }
         if ((self.objectType == .storageObject && self.streamSize != 0) ||

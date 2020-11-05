@@ -23,6 +23,10 @@ final class DumpFileTests: XCTestCase {
     
     func testDump() throws {
         for (name, fileExtension) in [
+            ("aquasync/ruby-ole/oleWithDirs", "ole"),
+            ("aquasync/ruby-ole/test_word_6", "doc"),
+            ("aquasync/ruby-ole/test_word_95", "doc"),
+            ("aquasync/ruby-ole/test_word_97", "doc"),
             ("decalage2/olefile/test-ole-file", "doc"),
             ("hughbe/custom", "msg"),
             ("hughbe/sample", "doc"),
