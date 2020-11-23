@@ -46,6 +46,10 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
     }
     
     public var data: Data {
+        guard entry.objectType != .storageObject else {
+            return Data()
+        }
+
         var buffer = [UInt8](repeating: 0, count: Int(entry.streamSize))
         buffer.withUnsafeMutableBufferPointer { b in
             try! file.readFile(storage: self, buffer: b)

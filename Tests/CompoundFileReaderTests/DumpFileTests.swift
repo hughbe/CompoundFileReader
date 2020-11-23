@@ -59,6 +59,7 @@ final class DumpFileTests: XCTestCase {
             ("ironfede/openmcdf/testbad", "ole"),
             ("ironfede/openmcdf/testgood", "ole"),
             ("ironfede/openmcdf/wstr_presets", "doc"),
+            ("pehohlva/wv2qt/testole", "doc"),
         ] {
             let data = try getData(name: name, fileExtension: fileExtension)
             let file = try CompoundFile(data: data)

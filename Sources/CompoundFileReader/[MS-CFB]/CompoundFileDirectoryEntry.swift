@@ -162,20 +162,16 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// mini stream exists. For a storage object, this field MUST be set to all zeroes.
         self.startSectorLocation = try dataStream.read(endianess: .littleEndian)
 
-        /// Stream Size (8 bytes): This 64-bit integer field contains the size of the user-defined data if this is
-        /// a stream object. For a root storage object, this field contains the size of the mini stream. For a
-        /// storage object, this field MUST be set to all zeroes.
-        ///  For a version 3 compound file 512-byte sector size, the value of this field MUST be less than
-        /// or equal to 0x80000000. (Equivalently, this requirement can be stated: the size of a stream or
-        /// of the mini stream in a version 3 compound file MUST be less than or equal to 2 gigabytes
-        /// (GB).) Note that as a consequence of this requirement, the most significant 32 bits of this field
-        /// MUST be zero in a version 3 compound file. However, implementers should be aware that
-        /// some older implementations did not initialize the most significant 32 bits of this field, and
-        /// these bits might therefore be nonzero in files that are otherwise valid version 3 compound
-        /// files. Although this document does not normatively specify parser behavior, it is recommended
-        /// that parsers ignore the most significant 32 bits of this field in version 3 compound files,
-        /// treating it as if its value were zero, unless there is a specific reason to do otherwise (for
-        /// example, a parser whose purpose is to verify the correctness of a compound file).
+        /// Stream Size (8 bytes): This 64-bit integer field contains the size of the user-defined data if this is a stream object. For a root storage
+        /// object, this field contains the size of the mini stream. For a storage object, this field MUST be set to all zeroes.
+        ///  For a version 3 compound file 512-byte sector size, the value of this field MUST be less than or equal to 0x80000000. (Equivalently,
+        /// this requirement can be stated: the size of a stream or of the mini stream in a version 3 compound file MUST be less than or equal to
+        /// 2 gigabytes (GB).) Note that as a consequence of this requirement, the most significant 32 bits of this field MUST be zero in a version 3
+        /// compound file. However, implementers should be aware that some older implementations did not initialize the most significant 32 bits of
+        /// this field, and these bits might therefore be nonzero in files that are otherwise valid version 3 compound files. Although this document does
+        /// not normatively specify parser behavior, it is recommended that parsers ignore the most significant 32 bits of this field in version 3 compound
+        /// files, treating it as if its value were zero, unless there is a specific reason to do otherwise (for example, a parser whose purpose is to verify
+        /// the correctness of a compound file).
         let streamSize: UInt64 = try dataStream.read(endianess: .littleEndian)
         if header.majorVersion == 0x03 {
             self.streamSize = streamSize & 0xFFFFFFFF
@@ -185,11 +181,6 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
 
         if self.objectType == .storageObject && self.startSectorLocation != 0 && self.startSectorLocation != CompoundFileDirectoryEntry.ENDOFCHAIN && self.startSectorLocation != CompoundFileDirectoryEntry.FREESECT {
             throw CompoundFileError.invalidEntryStartSectorLocation(startSectorLocation: self.startSectorLocation)
-        }
-        if ((self.objectType == .storageObject && self.streamSize != 0) ||
-                (header.majorVersion == 0x0003 && self.streamSize > 0x80000000))
-        {
-            throw CompoundFileError.invalidEntryStreamSize(streamSize: self.streamSize)
         }
     }
 

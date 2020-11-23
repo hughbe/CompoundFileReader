@@ -4057,6 +4057,257 @@ final class CompoundFileReaderTests: XCTestCase {
                 }
             }
         }
+        do {
+            let file = try CompoundFile(data: try getData(name: "pehohlva/wv2qt/testole", fileExtension: "doc"))
+            XCTAssertEqual("Root Entry", file.rootStorage.name)
+            XCTAssertEqual(0x0000000000000CC0, file.rootStorage.count)
+            do {
+                var storage = file.rootStorage
+                XCTAssertEqual(7, storage.children.count)
+                XCTAssertEqual("WordDocument", storage.children["WordDocument"]!.name)
+                XCTAssertEqual(0x00000000000059DC, storage.children["WordDocument"]!.count)
+                XCTAssertEqual([0xB4, 0x98, 0x58, 0xEC, 0x76, 0xC7, 0x18, 0x91, 0xBC, 0xA4, 0xB6, 0x88, 0x02, 0x6F, 0x93, 0x7E, 0x03, 0x12, 0x4E, 0x09, 0xE9, 0x17, 0x0D, 0x29, 0x8E, 0xE1, 0x14, 0x15, 0x4A, 0xE8, 0x84, 0x09], [UInt8](SHA256.hash(data: storage.children["WordDocument"]!.data)))
+                do {
+                    var storage = storage.children["WordDocument"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("ObjectPool", storage.children["ObjectPool"]!.name)
+                XCTAssertEqual(0x00000000A0000141, storage.children["ObjectPool"]!.count)
+                XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["ObjectPool"]!.data)))
+                do {
+                    var storage = storage.children["ObjectPool"]!
+                    XCTAssertEqual(4, storage.children.count)
+                    XCTAssertEqual("_1020966487", storage.children["_1020966487"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["_1020966487"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["_1020966487"]!.data)))
+                    do {
+                        var storage = storage.children["_1020966487"]!
+                        XCTAssertEqual(5, storage.children.count)
+                        XCTAssertEqual("\u{03}ObjInfo", storage.children["\u{03}ObjInfo"]!.name)
+                        XCTAssertEqual(0x0000000000000004, storage.children["\u{03}ObjInfo"]!.count)
+                        XCTAssertEqual([0x48, 0x3B, 0xF6, 0x4D, 0x5F, 0x67, 0xEF, 0xE8, 0x21, 0x3F, 0x62, 0x68, 0x04, 0xD3, 0x7D, 0x10, 0x2A, 0x15, 0x26, 0x7E, 0x7E, 0x89, 0x7D, 0xE6, 0xEC, 0x2E, 0x54, 0xE8, 0x82, 0x17, 0x2D, 0x6D], [UInt8](SHA256.hash(data: storage.children["\u{03}ObjInfo"]!.data)))
+                        do {
+                            var storage = storage.children["\u{03}ObjInfo"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10Native", storage.children["\u{01}Ole10Native"]!.name)
+                        XCTAssertEqual(0x0000000000000064, storage.children["\u{01}Ole10Native"]!.count)
+                        XCTAssertEqual([0xFE, 0x1B, 0x05, 0x06, 0x71, 0x9C, 0xE5, 0x14, 0x03, 0x88, 0x00, 0x89, 0x19, 0xDC, 0x18, 0xA4, 0xE3, 0x76, 0xF4, 0x72, 0x62, 0xFE, 0xD1, 0xDE, 0xAE, 0x9D, 0x32, 0x3A, 0xF7, 0x86, 0x58, 0xC8], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10Native"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10Native"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10ItemName", storage.children["\u{01}Ole10ItemName"]!.name)
+                        XCTAssertEqual(0x0000000000000008, storage.children["\u{01}Ole10ItemName"]!.count)
+                        XCTAssertEqual([0x2B, 0x99, 0xF2, 0x16, 0xA0, 0x49, 0xA5, 0x16, 0x8A, 0x4D, 0xF0, 0x06, 0xA5, 0xA7, 0x6E, 0x7E, 0xE7, 0x77, 0x9F, 0xCC, 0x70, 0xFB, 0xDA, 0x33, 0x99, 0xED, 0x92, 0xAA, 0xC6, 0x7F, 0x78, 0x51], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10ItemName"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10ItemName"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole", storage.children["\u{01}Ole"]!.name)
+                        XCTAssertEqual(0x0000000000000014, storage.children["\u{01}Ole"]!.count)
+                        XCTAssertEqual([0xC3, 0x6C, 0x8A, 0x4B, 0x7D, 0xEE, 0x70, 0x3B, 0x9C, 0xE6, 0xE2, 0x88, 0x03, 0x20, 0x33, 0xB7, 0x18, 0xFE, 0xEF, 0x01, 0xCA, 0x28, 0x3C, 0xFA, 0xA4, 0x33, 0x2A, 0x83, 0x34, 0xB2, 0xAD, 0xF3], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                        XCTAssertEqual(0x0000000000000053, storage.children["\u{01}CompObj"]!.count)
+                        XCTAssertEqual([0x82, 0xCF, 0x89, 0x0C, 0x72, 0xF2, 0x77, 0xEC, 0x77, 0x26, 0x27, 0x02, 0xC1, 0xB0, 0xE4, 0xC5, 0x5D, 0xEA, 0x7C, 0xB5, 0xC2, 0x50, 0xF9, 0xBB, 0x81, 0x78, 0x3D, 0x78, 0x89, 0xBF, 0xB9, 0xC0], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}CompObj"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+                    }
+
+                    XCTAssertEqual("_1020966263", storage.children["_1020966263"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["_1020966263"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["_1020966263"]!.data)))
+                    do {
+                        var storage = storage.children["_1020966263"]!
+                        XCTAssertEqual(5, storage.children.count)
+                        XCTAssertEqual("\u{03}ObjInfo", storage.children["\u{03}ObjInfo"]!.name)
+                        XCTAssertEqual(0x0000000000000004, storage.children["\u{03}ObjInfo"]!.count)
+                        XCTAssertEqual([0x48, 0x3B, 0xF6, 0x4D, 0x5F, 0x67, 0xEF, 0xE8, 0x21, 0x3F, 0x62, 0x68, 0x04, 0xD3, 0x7D, 0x10, 0x2A, 0x15, 0x26, 0x7E, 0x7E, 0x89, 0x7D, 0xE6, 0xEC, 0x2E, 0x54, 0xE8, 0x82, 0x17, 0x2D, 0x6D], [UInt8](SHA256.hash(data: storage.children["\u{03}ObjInfo"]!.data)))
+                        do {
+                            var storage = storage.children["\u{03}ObjInfo"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10Native", storage.children["\u{01}Ole10Native"]!.name)
+                        XCTAssertEqual(0x00000000000000C4, storage.children["\u{01}Ole10Native"]!.count)
+                        XCTAssertEqual([0x97, 0xAE, 0xFB, 0xEC, 0x15, 0x83, 0x3F, 0x11, 0x58, 0x80, 0xC8, 0x6F, 0x7A, 0x41, 0xA0, 0x01, 0xA3, 0x1D, 0x76, 0x5A, 0x05, 0x0F, 0xAB, 0x5D, 0xA2, 0xB7, 0xAF, 0xF8, 0x5E, 0x48, 0xFA, 0x40], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10Native"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10Native"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10ItemName", storage.children["\u{01}Ole10ItemName"]!.name)
+                        XCTAssertEqual(0x0000000000000008, storage.children["\u{01}Ole10ItemName"]!.count)
+                        XCTAssertEqual([0x2B, 0x99, 0xF2, 0x16, 0xA0, 0x49, 0xA5, 0x16, 0x8A, 0x4D, 0xF0, 0x06, 0xA5, 0xA7, 0x6E, 0x7E, 0xE7, 0x77, 0x9F, 0xCC, 0x70, 0xFB, 0xDA, 0x33, 0x99, 0xED, 0x92, 0xAA, 0xC6, 0x7F, 0x78, 0x51], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10ItemName"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10ItemName"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole", storage.children["\u{01}Ole"]!.name)
+                        XCTAssertEqual(0x0000000000000014, storage.children["\u{01}Ole"]!.count)
+                        XCTAssertEqual([0xC3, 0x6C, 0x8A, 0x4B, 0x7D, 0xEE, 0x70, 0x3B, 0x9C, 0xE6, 0xE2, 0x88, 0x03, 0x20, 0x33, 0xB7, 0x18, 0xFE, 0xEF, 0x01, 0xCA, 0x28, 0x3C, 0xFA, 0xA4, 0x33, 0x2A, 0x83, 0x34, 0xB2, 0xAD, 0xF3], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                        XCTAssertEqual(0x0000000000000053, storage.children["\u{01}CompObj"]!.count)
+                        XCTAssertEqual([0x82, 0xCF, 0x89, 0x0C, 0x72, 0xF2, 0x77, 0xEC, 0x77, 0x26, 0x27, 0x02, 0xC1, 0xB0, 0xE4, 0xC5, 0x5D, 0xEA, 0x7C, 0xB5, 0xC2, 0x50, 0xF9, 0xBB, 0x81, 0x78, 0x3D, 0x78, 0x89, 0xBF, 0xB9, 0xC0], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}CompObj"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+                    }
+
+                    XCTAssertEqual("_1020963964", storage.children["_1020963964"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["_1020963964"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["_1020963964"]!.data)))
+                    do {
+                        var storage = storage.children["_1020963964"]!
+                        XCTAssertEqual(5, storage.children.count)
+                        XCTAssertEqual("\u{03}ObjInfo", storage.children["\u{03}ObjInfo"]!.name)
+                        XCTAssertEqual(0x0000000000000004, storage.children["\u{03}ObjInfo"]!.count)
+                        XCTAssertEqual([0x48, 0x3B, 0xF6, 0x4D, 0x5F, 0x67, 0xEF, 0xE8, 0x21, 0x3F, 0x62, 0x68, 0x04, 0xD3, 0x7D, 0x10, 0x2A, 0x15, 0x26, 0x7E, 0x7E, 0x89, 0x7D, 0xE6, 0xEC, 0x2E, 0x54, 0xE8, 0x82, 0x17, 0x2D, 0x6D], [UInt8](SHA256.hash(data: storage.children["\u{03}ObjInfo"]!.data)))
+                        do {
+                            var storage = storage.children["\u{03}ObjInfo"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10Native", storage.children["\u{01}Ole10Native"]!.name)
+                        XCTAssertEqual(0x00000000000000E4, storage.children["\u{01}Ole10Native"]!.count)
+                        XCTAssertEqual([0xDA, 0xE3, 0x68, 0xEC, 0xA5, 0x8D, 0x49, 0xA4, 0x19, 0xF7, 0x50, 0xE4, 0xFC, 0x0D, 0x80, 0x43, 0x7B, 0x85, 0x15, 0x46, 0xB1, 0x64, 0x04, 0x3A, 0x86, 0x25, 0x3A, 0x97, 0x77, 0xB3, 0x8D, 0x9B], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10Native"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10Native"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10ItemName", storage.children["\u{01}Ole10ItemName"]!.name)
+                        XCTAssertEqual(0x0000000000000008, storage.children["\u{01}Ole10ItemName"]!.count)
+                        XCTAssertEqual([0x2B, 0x99, 0xF2, 0x16, 0xA0, 0x49, 0xA5, 0x16, 0x8A, 0x4D, 0xF0, 0x06, 0xA5, 0xA7, 0x6E, 0x7E, 0xE7, 0x77, 0x9F, 0xCC, 0x70, 0xFB, 0xDA, 0x33, 0x99, 0xED, 0x92, 0xAA, 0xC6, 0x7F, 0x78, 0x51], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10ItemName"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10ItemName"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole", storage.children["\u{01}Ole"]!.name)
+                        XCTAssertEqual(0x0000000000000014, storage.children["\u{01}Ole"]!.count)
+                        XCTAssertEqual([0xC3, 0x6C, 0x8A, 0x4B, 0x7D, 0xEE, 0x70, 0x3B, 0x9C, 0xE6, 0xE2, 0x88, 0x03, 0x20, 0x33, 0xB7, 0x18, 0xFE, 0xEF, 0x01, 0xCA, 0x28, 0x3C, 0xFA, 0xA4, 0x33, 0x2A, 0x83, 0x34, 0xB2, 0xAD, 0xF3], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                        XCTAssertEqual(0x0000000000000053, storage.children["\u{01}CompObj"]!.count)
+                        XCTAssertEqual([0x82, 0xCF, 0x89, 0x0C, 0x72, 0xF2, 0x77, 0xEC, 0x77, 0x26, 0x27, 0x02, 0xC1, 0xB0, 0xE4, 0xC5, 0x5D, 0xEA, 0x7C, 0xB5, 0xC2, 0x50, 0xF9, 0xBB, 0x81, 0x78, 0x3D, 0x78, 0x89, 0xBF, 0xB9, 0xC0], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}CompObj"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+                    }
+
+                    XCTAssertEqual("_1020961869", storage.children["_1020961869"]!.name)
+                    XCTAssertEqual(0x0000000000000000, storage.children["_1020961869"]!.count)
+                    XCTAssertEqual([0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24, 0x27, 0xAE, 0x41, 0xE4, 0x64, 0x9B, 0x93, 0x4C, 0xA4, 0x95, 0x99, 0x1B, 0x78, 0x52, 0xB8, 0x55], [UInt8](SHA256.hash(data: storage.children["_1020961869"]!.data)))
+                    do {
+                        var storage = storage.children["_1020961869"]!
+                        XCTAssertEqual(5, storage.children.count)
+                        XCTAssertEqual("\u{03}ObjInfo", storage.children["\u{03}ObjInfo"]!.name)
+                        XCTAssertEqual(0x0000000000000004, storage.children["\u{03}ObjInfo"]!.count)
+                        XCTAssertEqual([0x48, 0x3B, 0xF6, 0x4D, 0x5F, 0x67, 0xEF, 0xE8, 0x21, 0x3F, 0x62, 0x68, 0x04, 0xD3, 0x7D, 0x10, 0x2A, 0x15, 0x26, 0x7E, 0x7E, 0x89, 0x7D, 0xE6, 0xEC, 0x2E, 0x54, 0xE8, 0x82, 0x17, 0x2D, 0x6D], [UInt8](SHA256.hash(data: storage.children["\u{03}ObjInfo"]!.data)))
+                        do {
+                            var storage = storage.children["\u{03}ObjInfo"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10Native", storage.children["\u{01}Ole10Native"]!.name)
+                        XCTAssertEqual(0x0000000000000084, storage.children["\u{01}Ole10Native"]!.count)
+                        XCTAssertEqual([0x77, 0x85, 0x44, 0x8A, 0x5B, 0x7C, 0xCD, 0x1E, 0x07, 0x81, 0xE5, 0xCF, 0x8E, 0x57, 0x0B, 0xA7, 0xED, 0x9C, 0x39, 0xBD, 0xFD, 0xE0, 0x7E, 0x56, 0x9B, 0x8D, 0xEF, 0xF1, 0x94, 0xAA, 0x80, 0x9F], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10Native"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10Native"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole10ItemName", storage.children["\u{01}Ole10ItemName"]!.name)
+                        XCTAssertEqual(0x0000000000000008, storage.children["\u{01}Ole10ItemName"]!.count)
+                        XCTAssertEqual([0x2B, 0x99, 0xF2, 0x16, 0xA0, 0x49, 0xA5, 0x16, 0x8A, 0x4D, 0xF0, 0x06, 0xA5, 0xA7, 0x6E, 0x7E, 0xE7, 0x77, 0x9F, 0xCC, 0x70, 0xFB, 0xDA, 0x33, 0x99, 0xED, 0x92, 0xAA, 0xC6, 0x7F, 0x78, 0x51], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole10ItemName"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole10ItemName"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}Ole", storage.children["\u{01}Ole"]!.name)
+                        XCTAssertEqual(0x0000000000000014, storage.children["\u{01}Ole"]!.count)
+                        XCTAssertEqual([0xC3, 0x6C, 0x8A, 0x4B, 0x7D, 0xEE, 0x70, 0x3B, 0x9C, 0xE6, 0xE2, 0x88, 0x03, 0x20, 0x33, 0xB7, 0x18, 0xFE, 0xEF, 0x01, 0xCA, 0x28, 0x3C, 0xFA, 0xA4, 0x33, 0x2A, 0x83, 0x34, 0xB2, 0xAD, 0xF3], [UInt8](SHA256.hash(data: storage.children["\u{01}Ole"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}Ole"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+
+                        XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                        XCTAssertEqual(0x000000000000005C, storage.children["\u{01}CompObj"]!.count)
+                        XCTAssertEqual([0xE9, 0x6A, 0xBF, 0x89, 0xAB, 0x32, 0x1F, 0xA7, 0x20, 0x91, 0x67, 0x5F, 0xA1, 0x4E, 0x2F, 0xC0, 0x87, 0xEA, 0x83, 0x08, 0xC7, 0x43, 0xE8, 0x4F, 0x3B, 0x46, 0xE0, 0x15, 0x81, 0x38, 0x6D, 0x07], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                        do {
+                            var storage = storage.children["\u{01}CompObj"]!
+                            XCTAssertEqual(0, storage.children.count)
+                        }
+                    }
+                }
+
+                XCTAssertEqual("Data", storage.children["Data"]!.name)
+                XCTAssertEqual(0x0000000000001000, storage.children["Data"]!.count)
+                XCTAssertEqual([0x3B, 0xA2, 0xB7, 0x47, 0x47, 0x6F, 0xFF, 0xB5, 0x73, 0x24, 0x71, 0x29, 0x0A, 0x25, 0x7D, 0xB9, 0xB3, 0xF5, 0x5D, 0x0A, 0x73, 0xD9, 0x83, 0x14, 0x2E, 0x2F, 0xD3, 0x23, 0xF9, 0xBD, 0xDB, 0x20], [UInt8](SHA256.hash(data: storage.children["Data"]!.data)))
+                do {
+                    var storage = storage.children["Data"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("1Table", storage.children["1Table"]!.name)
+                XCTAssertEqual(0x00000000000020A6, storage.children["1Table"]!.count)
+                XCTAssertEqual([0x80, 0xF3, 0x0D, 0x9C, 0xBA, 0x33, 0x28, 0x17, 0xAE, 0x65, 0xB8, 0x1C, 0xE0, 0xDD, 0x71, 0x8F, 0x80, 0x55, 0x81, 0xBF, 0x6F, 0x26, 0x40, 0xA8, 0xC8, 0x4F, 0xE1, 0x59, 0x07, 0x2B, 0x03, 0x07], [UInt8](SHA256.hash(data: storage.children["1Table"]!.data)))
+                do {
+                    var storage = storage.children["1Table"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{05}SummaryInformation", storage.children["\u{05}SummaryInformation"]!.name)
+                XCTAssertEqual(0x00000000000001C4, storage.children["\u{05}SummaryInformation"]!.count)
+                XCTAssertEqual([0x19, 0xD8, 0xE3, 0x65, 0x32, 0x7F, 0x09, 0xE8, 0x14, 0xCA, 0x7A, 0x9B, 0xF1, 0x14, 0x89, 0x01, 0xFC, 0xFA, 0xD7, 0xE0, 0x1F, 0x26, 0x29, 0xDC, 0x5A, 0x22, 0x8F, 0x89, 0x02, 0x75, 0x5B, 0xDE], [UInt8](SHA256.hash(data: storage.children["\u{05}SummaryInformation"]!.data)))
+                do {
+                    var storage = storage.children["\u{05}SummaryInformation"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{05}DocumentSummaryInformation", storage.children["\u{05}DocumentSummaryInformation"]!.name)
+                XCTAssertEqual(0x00000000000001E0, storage.children["\u{05}DocumentSummaryInformation"]!.count)
+                XCTAssertEqual([0xC0, 0x35, 0xFA, 0xFE, 0x0B, 0x8D, 0xA3, 0xF7, 0x0D, 0x89, 0xC4, 0x02, 0x73, 0x2F, 0xA7, 0xDC, 0xBD, 0x5E, 0x33, 0x0A, 0xD1, 0x90, 0x72, 0xF3, 0x8E, 0x2E, 0x5B, 0xD0, 0x94, 0x0D, 0x0D, 0x2D], [UInt8](SHA256.hash(data: storage.children["\u{05}DocumentSummaryInformation"]!.data)))
+                do {
+                    var storage = storage.children["\u{05}DocumentSummaryInformation"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+
+                XCTAssertEqual("\u{01}CompObj", storage.children["\u{01}CompObj"]!.name)
+                XCTAssertEqual(0x000000000000006A, storage.children["\u{01}CompObj"]!.count)
+                XCTAssertEqual([0x6F, 0x1E, 0xC7, 0x17, 0xCD, 0x67, 0x1C, 0x4E, 0x65, 0x32, 0x1A, 0x11, 0x29, 0xF6, 0xFE, 0x30, 0x36, 0xE0, 0xEF, 0xFC, 0x4F, 0x87, 0xB3, 0xC7, 0x21, 0x60, 0xEE, 0xED, 0x71, 0x48, 0x37, 0x60], [UInt8](SHA256.hash(data: storage.children["\u{01}CompObj"]!.data)))
+                do {
+                    var storage = storage.children["\u{01}CompObj"]!
+                    XCTAssertEqual(0, storage.children.count)
+                }
+            }
+        }
         /*
         do {
             let file = try CompoundFile(data: try getData(name: "ironfede/openmcdf/poWEr.prelim", fileExtension: "doc"))
