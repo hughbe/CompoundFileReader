@@ -8,7 +8,7 @@
 import DataStream
 import Foundation
 
-public class CompoundFile {
+public class CompoundFile: CustomStringConvertible {
     private var dataStream: DataStream
     private let header: CompoundFileHeader
     private let sectorSize: UInt32
@@ -148,10 +148,7 @@ public class CompoundFile {
     }
 
 
-    public func dump() {
-        print(header.debugDescription)
-        
-        print()
-        print(rootStorage.debugDescription)
+    public var description: String {
+        return rootStorage.description
     }
 }

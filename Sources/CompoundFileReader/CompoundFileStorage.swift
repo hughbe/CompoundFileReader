@@ -8,17 +8,13 @@
 import DataStream
 import Foundation
 
-public struct CompoundFileStorage: CustomDebugStringConvertible {
+public struct CompoundFileStorage: CustomStringConvertible {
     internal let file: CompoundFile
     internal let entry: CompoundFileDirectoryEntry
     
-    public var name: String {
-        entry.name
-    }
+    public var name: String { entry.name }
     
-    public var count: UInt64 {
-        entry.streamSize
-    }
+    public var count: UInt64 { entry.streamSize }
 
     public lazy var children: [String: CompoundFileStorage] = {
         guard entry.childID != CompoundFileDirectoryEntry.NOSTREAM, let child = try? file.getStorage(entryID: entry.childID) else {
@@ -61,7 +57,17 @@ public struct CompoundFileStorage: CustomDebugStringConvertible {
         return DataStream(data: data)
     }
     
-    public var debugDescription: String {
-        return entry.debugDescription
+    public var description: String {
+        return getDescription(level: 0)
+    }
+    
+    private func getDescription(level: Int) -> String {
+        var this = self
+        var s = "\(String(repeating: "\t", count: level))- \(name) (\(count) bytes)"
+        for child in this.children {
+            s += "\n"
+            s += child.value.getDescription(level: level + 1)
+        }
+        return s
     }
 }
