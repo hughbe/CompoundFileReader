@@ -4416,7 +4416,22 @@ final class CompoundFileReaderTests: XCTestCase {
         }
     }
     
+    func evaluateProblem(problemNumber: Int, problemBlock: () throws -> ()) rethrows {
+        print("Evaluating problem \(problemNumber)")
+
+        let start = DispatchTime.now() // <<<<<<<<<< Start time
+        try problemBlock()
+        let end = DispatchTime.now()   // <<<<<<<<<<   end time
+
+        let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+        let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+
+        print("Time to evaluate problem \(problemNumber): \(timeInterval) seconds")
+    }
+
+    
     func testPerformance2() throws {
+        /*
         do {
             let file = try CompoundFile(data: try getData(name: "hughbe/VBA Project", fileExtension: "pps"))
             let storage = file.rootStorage.children["PowerPoint Document"]!
@@ -4424,6 +4439,14 @@ final class CompoundFileReaderTests: XCTestCase {
                 for _ in 0...10_000 {
                     let _ = storage.data
                 }
+            }
+        }
+        */
+        try evaluateProblem(problemNumber: 0) {
+            let file = try CompoundFile(data: try getData(name: "hughbe/VBA Project", fileExtension: "pps"))
+            let storage = file.rootStorage.children["PowerPoint Document"]!
+            for _ in 0...10_000 {
+                let _ = storage.data
             }
         }
     }

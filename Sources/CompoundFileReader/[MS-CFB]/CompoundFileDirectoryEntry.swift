@@ -30,15 +30,12 @@ import WindowsDataTypes
 /// are 32 directory entries in a 4,096-byte directory sector (version 4 compound file). The number of directory entries
 /// can exceed the number of storage objects and stream objects due to unallocated directory entries.
 /// The detailed Directory Entry structure is specified below.
-internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
+internal struct CompoundFileDirectoryEntry {
     public static let size: UInt32 = 128
-    public static let NOSTREAM = 0xFFFFFFFF
-    public static let FREESECT = 0xFFFFFFFF
-    public static let ENDOFCHAIN = 0xFFFFFFFE
-    public static let FATSECT = 0xFFFFFFFD
-    public static let DIFATSECT = 0xFFFFFFFC
+    public static let NOSTREAM: UInt32 = 0xFFFFFFFF
     
-    public let name: String
+    public let entryName: [UInt8]
+    public let entryNameLength: UInt16
     public let objectType: CompoundFileObjectType
     public let colorFlag: ColorFlag
     public let leftSiblingID: UInt32
@@ -59,39 +56,28 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// storage, the directory entry name is compared by using a special case-insensitive uppercase
         /// mapping, described in Red-Black Tree. The following characters are illegal and MUST NOT be part
         /// of the name: '/', '\', ':', '!'.
-        var chars = [UInt16]()
-        for _ in 0..<32 {
-            let char: UInt16 = try dataStream.read(endianess: .littleEndian)
-            chars.append(char)
-        }
+        self.entryName = try dataStream.readBytes(count: 64)
 
-        let entryNameLength: UInt16 = try dataStream.read(endianess: .littleEndian)
-        if entryNameLength % 2 != 0 || entryNameLength > 64 {
-            throw CompoundFileError.invalidEntryNameLength(entryNameLength: entryNameLength)
-        }
-        
-        if entryNameLength == 0 {
-            self.name = ""
-        } else {
-            self.name = String(utf16CodeUnits: &chars, count: Int(entryNameLength / 2) - 1)
-        }
+        /// Directory Entry Name Length (2 bytes): This field MUST match the length of the Directory Entry Name Unicode string in bytes. The
+        /// length MUST be a multiple of 2 and include the terminating null character in the count. This length MUST NOT exceed 64, the
+        /// maximum size of the Directory Entry Name field.
+        self.entryNameLength = try dataStream.read(endianess: .littleEndian)
 
         /// Object Type (1 byte): This field MUST be 0x00, 0x01, 0x02, or 0x05, depending on the actual type
         /// of object. All other values are not valid
-        let objectTypeRaw: UInt8 = try dataStream.read()
-        guard let objectType = CompoundFileObjectType(rawValue: objectTypeRaw) else {
-            throw CompoundFileError.invalidEntryObjectType(objectType: objectTypeRaw)
+        if let objectType = CompoundFileObjectType(rawValue: try dataStream.read()) {
+            self.objectType = objectType
+        } else {
+            self.objectType = .unknownOrAllocated
         }
-        
-        self.objectType = objectType
 
         /// Color Flag (1 byte): This field MUST be 0x00 (red) or 0x01 (black). All other values are not valid.
         let colorFlagRaw = try dataStream.read() as UInt8
-        guard let colorFlag = ColorFlag(rawValue: colorFlagRaw) else {
-            throw CompoundFileError.invalidEntryColorFlag(colorFlag: colorFlagRaw)
+        if let colorFlag = ColorFlag(rawValue: colorFlagRaw) {
+            self.colorFlag = colorFlag
+        } else {
+            self.colorFlag = .unknown
         }
-        
-        self.colorFlag = colorFlag
 
         /// Left Sibling ID (4 bytes): This field contains the stream ID of the left sibling. If there is no left
         /// sibling, the field MUST be set to NOSTREAM (0xFFFFFFFF).
@@ -99,21 +85,36 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// REGSID 0x00000000 — 0xFFFFFFF9 Regular stream ID to identify the directory entry.
         /// MAXREGSID 0xFFFFFFFA Maximum regular stream ID.
         /// NOSTREAM 0xFFFFFFFF If there is no left sibling.
-        self.leftSiblingID = try dataStream.read(endianess: .littleEndian)
+        let leftSiblingID: UInt32 = try dataStream.read(endianess: .littleEndian)
+        if self.objectType != .unknownOrAllocated {
+            self.leftSiblingID = leftSiblingID
+        } else {
+            self.leftSiblingID = CompoundFileDirectoryEntry.NOSTREAM
+        }
 
         /// Right Sibling ID (4 bytes): This field contains the stream ID of the right sibling. If there is no right
         /// sibling, the field MUST be set to NOSTREAM (0xFFFFFFFF).Value Meaning
         /// REGSID 0x00000000 — 0xFFFFFFF9 Regular stream ID to identify the directory entry.
         /// MAXREGSID 0xFFFFFFFA Maximum regular stream ID.
         /// NOSTREAM 0xFFFFFFFF If there is no right sibling.
-        self.rightSiblingID = try dataStream.read(endianess: .littleEndian)
+        let rightSiblingID: UInt32 = try dataStream.read(endianess: .littleEndian)
+        if self.objectType != .unknownOrAllocated {
+            self.rightSiblingID = rightSiblingID
+        } else {
+            self.rightSiblingID = CompoundFileDirectoryEntry.NOSTREAM
+        }
 
         /// Child ID (4 bytes): This field contains the stream ID of a child object. If there is no child object,
         /// including all entries for stream object the field MUST be set to NOSTREAM (0xFFFFFFFF)
         /// REGSID 0x00000000 — 0xFFFFFFF9 Regular stream ID to identify the directory entry.
         /// MAXREGSID 0xFFFFFFFA Maximum regular stream ID.
         /// NOSTREAM 0xFFFFFFFF If there is no child object.
-        self.childID = try dataStream.read(endianess: .littleEndian)
+        let childID: UInt32 = try dataStream.read(endianess: .littleEndian)
+        if self.objectType != .unknownOrAllocated {
+            self.childID = childID
+        } else {
+            self.childID = CompoundFileDirectoryEntry.NOSTREAM
+        }
 
         /// CLSID (16 bytes): This field contains an object class GUID, if this entry is for a storage object or
         /// root storage object. For a stream object, this field MUST be set to all zeroes. A value containing all
@@ -157,9 +158,8 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// 0x0000000000000000 | No modified time was recorded for the object.
         self.modifiedTime = try FILETIME(dataStream: &dataStream)
 
-        /// Starting Sector Location (4 bytes): This field contains the first sector location if this is a stream
-        /// object. For a root storage object, this field MUST contain the first sector of the mini stream, if the
-        /// mini stream exists. For a storage object, this field MUST be set to all zeroes.
+        /// Starting Sector Location (4 bytes): This field contains the first sector location if this is a stream object. For a root storage object, this
+        /// field MUST contain the first sector of the mini stream, if the mini stream exists. For a storage object, this field MUST be set to all zeroes.
         self.startSectorLocation = try dataStream.read(endianess: .littleEndian)
 
         /// Stream Size (8 bytes): This 64-bit integer field contains the size of the user-defined data if this is a stream object. For a root storage
@@ -178,27 +178,5 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         } else {
             self.streamSize = streamSize
         }
-
-        if self.objectType == .storageObject && self.startSectorLocation != 0 && self.startSectorLocation != CompoundFileDirectoryEntry.ENDOFCHAIN && self.startSectorLocation != CompoundFileDirectoryEntry.FREESECT {
-            throw CompoundFileError.invalidEntryStartSectorLocation(startSectorLocation: self.startSectorLocation)
-        }
-    }
-
-    var debugDescription: String {
-        var s = ""
-        s += "-- CompoundFileEntry --\n"
-        s += "- Name: \(name)\n"
-        s += "- Object Type: \(objectType)\n"
-        s += "- Color Flag: \(colorFlag)\n"
-        s += "- Left Sibling ID: \(leftSiblingID.hexString)\n"
-        s += "- Right Sibling ID: \(rightSiblingID.hexString)\n"
-        s += "- Child ID: \(childID.hexString)\n"
-        s += "- CLSID: \(clsid)\n"
-        s += "- State Bits: \(stateBits.hexString)\n"
-        s += "- Creation Time: \(creationTime)\n"
-        s += "- Modified Time: \(modifiedTime)\n"
-        s += "- Starting Sector Location: \(startSectorLocation.hexString)\n"
-        s += "- Stream Size: \(streamSize.hexString)\n"
-        return s
     }
 }

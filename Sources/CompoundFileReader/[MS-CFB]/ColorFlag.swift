@@ -12,4 +12,6 @@ internal enum ColorFlag: UInt8 {
     
     /// black 0x01
     case black = 0x01
+    
+    case unknown = 0xFF
 }

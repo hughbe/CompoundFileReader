@@ -11,38 +11,66 @@ import Foundation
 public struct CompoundFileStorage: CustomStringConvertible {
     internal let file: CompoundFile
     internal let entry: CompoundFileDirectoryEntry
+    public let name: String
     
     internal init(file: CompoundFile, entry: CompoundFileDirectoryEntry) {
         self.file = file
         self.entry = entry
+
+        if ((entry.entryNameLength % 2) == 0) && entry.entryNameLength > 0 && entry.entryNameLength <= 64 {
+            self.name = String(bytes: entry.entryName[0...(Int(entry.entryNameLength) - 2)], encoding: .utf16LittleEndian)!
+        } else {
+            self.name = ""
+        }
     }
-    
-    public var name: String { entry.name }
     
     public var count: UInt64 { entry.streamSize }
 
-    public lazy var children: [String: CompoundFileStorage] = {
-        guard entry.childID != CompoundFileDirectoryEntry.NOSTREAM, let child = try? file.getStorage(entryID: entry.childID) else {
-            return [:]
+    private lazy var allChildren: [CompoundFileStorage] = {
+        guard entry.childID != CompoundFileDirectoryEntry.NOSTREAM else {
+            return []
         }
 
-        var result = [String: CompoundFileStorage]()
-        result[child.name] = child
+        let childEntry = file.directoryEntries[Int(entry.childID)]
+        let child = CompoundFileStorage(file: file, entry: childEntry)
+
+        var result = [CompoundFileStorage]()
+        result.append(child)
         child.addSiblings(to: &result)
         return result
     }()
     
-    private func addSiblings(to: inout [String: CompoundFileStorage]) {
+    public lazy var children: [String: CompoundFileStorage] = {
+        var result: [String: CompoundFileStorage] = [:]
+        result.reserveCapacity(allChildren.count)
+        for element in allChildren {
+            result[element.name] = element
+        }
+        
+        return result
+    }()
+    
+    private func addSiblings(to: inout [CompoundFileStorage]) {
         let leftID = entry.leftSiblingID
-        if leftID != CompoundFileDirectoryEntry.NOSTREAM, let leftSibling = try? file.getStorage(entryID: leftID) {
-            to[leftSibling.name] = leftSibling
-            leftSibling.addSiblings(to: &to)
+        if leftID != CompoundFileDirectoryEntry.NOSTREAM {
+            let siblingEntry = file.directoryEntries[Int(leftID)]
+            let sibling = CompoundFileStorage(file: file, entry: siblingEntry)
+            if siblingEntry.objectType != .unknownOrAllocated {
+                to.append(sibling)
+            }
+
+            sibling.addSiblings(to: &to)
         }
         
         let rightID = entry.rightSiblingID
-        if rightID != CompoundFileDirectoryEntry.NOSTREAM, let rightSibling = try? file.getStorage(entryID: rightID) {
-            to[rightSibling.name] = rightSibling
-            rightSibling.addSiblings(to: &to)
+        if rightID != CompoundFileDirectoryEntry.NOSTREAM {
+            let siblingEntry = file.directoryEntries[Int(rightID)]
+            let sibling = CompoundFileStorage(file: file, entry: siblingEntry)
+            if siblingEntry.objectType != .unknownOrAllocated {
+                to.append(sibling)
+            }
+
+            sibling.addSiblings(to: &to)
         }
     }
     

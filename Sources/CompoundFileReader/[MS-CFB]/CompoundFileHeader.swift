@@ -21,7 +21,7 @@ internal struct CompoundFileHeader: CustomDebugStringConvertible {
     public let reserved1: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
     public let numberOfDirectorySectors: UInt32
     public let numberOfFATSectors: UInt32
-    public let firstDirectorySectorLocation: UInt32
+    public var firstDirectorySectorLocation: UInt32
     public let transactionSignatureNumber: UInt32
     public let miniStreamCutoffSize: UInt32
     public let firstMiniFATSectorLocation: UInt32
@@ -34,7 +34,7 @@ internal struct CompoundFileHeader: CustomDebugStringConvertible {
         /// Header Signature (8 bytes): Identification signature for the compound file structure, and MUST be
         /// set to the value 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1.
         self.signature = try dataStream.read(endianess: .littleEndian)
-        if self.signature != 0xE11AB1A1E011CFD0 as UInt64 {
+        guard self.signature == 0xE11AB1A1E011CFD0 as UInt64 else {
             throw CompoundFileError.invalidSignature(signature: self.signature)
         }
 
