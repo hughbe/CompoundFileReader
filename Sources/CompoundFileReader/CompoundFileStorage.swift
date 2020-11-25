@@ -12,6 +12,11 @@ public struct CompoundFileStorage: CustomStringConvertible {
     internal let file: CompoundFile
     internal let entry: CompoundFileDirectoryEntry
     
+    internal init(file: CompoundFile, entry: CompoundFileDirectoryEntry) {
+        self.file = file
+        self.entry = entry
+    }
+    
     public var name: String { entry.name }
     
     public var count: UInt64 { entry.streamSize }

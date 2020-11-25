@@ -14,8 +14,13 @@ public class CompoundFile: CustomStringConvertible {
     private let sectorSize: UInt32
     private let miniSectorSize: UInt32
     
-    public init(data: Data) throws {
-        self.dataStream = DataStream(data)
+    public convenience init(data: Data) throws {
+        var dataStream = DataStream(data)
+        try self.init(dataStream: &dataStream)
+    }
+    
+    public init(dataStream: inout DataStream) throws {
+        self.dataStream = dataStream
         self.header = try CompoundFileHeader(dataStream: &dataStream)
         self.sectorSize = UInt32(pow(2, Double(header.sectorShift)))
         self.miniSectorSize = UInt32(pow(2, Double(header.miniSectorShift)))

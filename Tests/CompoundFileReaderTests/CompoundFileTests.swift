@@ -4358,7 +4358,6 @@ final class CompoundFileReaderTests: XCTestCase {
     }
 
     func testConstructorInvalid() throws {
-        #if false
         XCTAssertThrowsError(try CompoundFile(data: Data([])))
         do {
             let data = try getData(name: "ironfede/openmcdf/corrupted-sector-chain-2", fileExtension: "doc")
@@ -4390,7 +4389,10 @@ final class CompoundFileReaderTests: XCTestCase {
             let data = try getData(name: "ironfede/openmcdf/no_sectors", fileExtension: "doc")
             XCTAssertThrowsError(try CompoundFile(data: data))
         }
-        #endif
+        do {
+            let data = try getData(name: "ironfede/openmcdf/_thumbs_bug_24", fileExtension: "db")
+            XCTAssertThrowsError(try CompoundFile(data: data))
+        }
     }
 
     func testPerformance1() throws {

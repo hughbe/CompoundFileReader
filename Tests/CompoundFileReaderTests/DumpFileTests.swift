@@ -39,13 +39,11 @@ final class DumpFileTests: XCTestCase {
             ("microsoft/compoundfilereader/2", "dat"),
             ("microsoft/compoundfilereader/unicode", "dat"),
             ("ironfede/openmcdf/_Test", "ppt"),
-            //("ironfede/openmcdf/_thumbs_bug_24", "db"),
             ("ironfede/openmcdf/2_MB-W", "ppt"),
             ("ironfede/openmcdf/2custom", "doc"),
             ("ironfede/openmcdf/BUG_16_", "xls"),
-            //("ironfede/openmcdf/CorruptedDoc_bug3547815", "doc"),
+            ("ironfede/openmcdf/CorruptedDoc_bug3547815", "doc"),
             //("ironfede/openmcdf/CorruptedDoc_bug3547815_B", "doc"),
-            //("ironfede/openmcdf/CorruptedDoc_bug36", "doc"),
             ("ironfede/openmcdf/english.presets", "doc"),
             ("ironfede/openmcdf/mediationform", "doc"),
             ("ironfede/openmcdf/mime001", "doc"),
@@ -64,6 +62,7 @@ final class DumpFileTests: XCTestCase {
         ] {
             let data = try getData(name: name, fileExtension: fileExtension)
             let file = try CompoundFile(data: data)
+            print("Dumping \(name).\(fileExtension)")
             DumpFileTests.dump(file: file)
         }
     }
