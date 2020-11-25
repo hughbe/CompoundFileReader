@@ -122,7 +122,7 @@ public class CompoundFile: CustomStringConvertible {
     }
 
     private func sectorOffsetToStreamPosition(sector: UInt32, offset: UInt32) -> Int {
-        return Int(sectorSize + sectorSize * sector + offset)
+        return Int(sectorSize) + Int(sectorSize) * Int(sector) + Int(offset)
     }
 
     private func locateFinalMiniSector(sector: UInt32, offset: UInt32) -> (sector: UInt32, offset: UInt32) {
@@ -146,7 +146,6 @@ public class CompoundFile: CustomStringConvertible {
         let (sector, offset) = locateFinalSector(sector: rootStorage.entry.startSectorLocation, offset: sector * miniSectorSize + offset)
         return sectorOffsetToStreamPosition(sector: sector, offset: offset)
     }
-
 
     public var description: String {
         return rootStorage.description

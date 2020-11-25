@@ -4393,7 +4393,7 @@ final class CompoundFileReaderTests: XCTestCase {
         #endif
     }
 
-    func testPerformance() throws {
+    func testPerformance1() throws {
         do {
             let file = try CompoundFile(data: try getData(name: "hughbe/custom", fileExtension: "msg"))
             XCTAssertEqual("Root Entry", file.rootStorage.name)
@@ -4413,10 +4413,23 @@ final class CompoundFileReaderTests: XCTestCase {
             }
         }
     }
+    
+    func testPerformance2() throws {
+        do {
+            let file = try CompoundFile(data: try getData(name: "hughbe/VBA Project", fileExtension: "pps"))
+            let storage = file.rootStorage.children["PowerPoint Document"]!
+            measure(metrics: [XCTClockMetric(), XCTCPUMetric(), XCTMemoryMetric()]) {
+                for _ in 0...10_000 {
+                    let _ = storage.data
+                }
+            }
+        }
+    }
 
     static var allTests = [
         ("testConstructor", testConstructor),
         ("testConstructorInvalid", testConstructorInvalid),
-        ("testPerformance", testPerformance),
+        ("testPerformance1", testPerformance1),
+        ("testPerformance2", testPerformance2),
     ]
 }
