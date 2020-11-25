@@ -31,6 +31,7 @@ final class DumpFileTests: XCTestCase {
             ("hughbe/custom", "msg"),
             ("hughbe/sample", "doc"),
             ("hughbe/7z1900-x64", "msi"),
+            ("hughbe/VBA Project", "pps"),
             ("microsoft/compoundfilereader/{B85C5677-E8BC-11E4-825B-10604B7CB9F0}", "dat"),
             ("microsoft/compoundfilereader/{FE554E21-EA21-11E4-825B-10604B7CB9F0}", "dat"),
             ("microsoft/compoundfilereader/{FE554E21-EA21-11E4-825B-10604B7CB9F0}", "dat"),

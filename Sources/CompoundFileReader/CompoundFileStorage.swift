@@ -53,9 +53,7 @@ public struct CompoundFileStorage: CustomStringConvertible {
         return Data(buffer)
     }
     
-    public var dataStream: DataStream {
-        return DataStream(data: data)
-    }
+    public var dataStream: DataStream { DataStream(data) }
     
     public var description: String {
         return getDescription(level: 0)
