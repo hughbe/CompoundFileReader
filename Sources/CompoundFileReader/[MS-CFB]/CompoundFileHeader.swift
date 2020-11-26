@@ -39,7 +39,7 @@ internal struct CompoundFileHeader: CustomDebugStringConvertible {
         }
 
         /// Header CLSID (16 bytes): Reserved and unused class ID that MUST be set to all zeroes (CLSID_NULL).
-        self.clsid = try dataStream.read(type: GUID.self)
+        self.clsid = try GUID(dataStream: &dataStream)
         
         /// Minor Version (2 bytes): Version number for nonbreaking changes. This field SHOULD be set to
         /// 0x003E if the major version field is either 0x0003 or 0x0004.

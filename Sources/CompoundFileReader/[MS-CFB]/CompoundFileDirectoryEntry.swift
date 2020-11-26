@@ -125,7 +125,7 @@ internal struct CompoundFileDirectoryEntry: CustomDebugStringConvertible {
         /// Value                              | Meaning
         /// ------------------------------------------------------------------------------------
         /// 0x00000000000000000000000000000000 | No object class is associated with the storage.
-        self.clsid = try dataStream.read(type: GUID.self)
+        self.clsid = try GUID(dataStream: &dataStream)
 
         /// State Bits (4 bytes): This field contains the user-defined flags if this entry is for a storage object or
         /// root storage object. For a stream object, this field SHOULD be set to all zeroes because many
