@@ -3,5 +3,6 @@ import XCTest
 import CompoundFileReaderTests
 
 var tests = [XCTestCaseEntry]()
-tests += CompoundFileReaderTests.allTests()
+tests += CompoundFileTests.allTests()
+tests += DumpFileTests.allTests()
 XCTMain(tests)

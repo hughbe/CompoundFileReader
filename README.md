@@ -10,9 +10,9 @@ Add the following line to your project's SwiftPM dependencies:
 ```
 
 ```swift
-import NK2Reader
+import CompoundFileReader
 
-let data = Data(contentsOfFile: "<path-to-file>.rwz")!
+let data = Data(contentsOfFile: "<path-to-file>")!
 let file = try CompoundFile(data: data)
 print(file.rootStorage)
 ```

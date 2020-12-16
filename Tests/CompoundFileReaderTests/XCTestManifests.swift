@@ -3,7 +3,8 @@ import XCTest
 #if !canImport(ObjectiveC)
 public func allTests() -> [XCTestCaseEntry] {
     return [
-        testCase(CompoundFileReaderTests.allTests),
+        testCase(CompoundFileTests.allTests),
+        testCase(DumpFileTests.allTests),
     ]
 }
 #endif
